@@ -1,0 +1,28 @@
+first time build:
+
+> cd server
+> npm install
+
+to run:
+
+> cd server
+> npm run dev
+
+then, from browser, access:
+http://localhost:5000/api
+
+
+------------------------------------------------------------
+
+server side is express
+
+https://www.youtube.com/watch?v=w3vs4a03y3I
+
+$ cd server
+$ npm init -y
+
+$ npm i express
+
+install nodemon
+
+$ npm i nodemon -D

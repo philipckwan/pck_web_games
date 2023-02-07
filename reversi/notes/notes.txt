@@ -1,0 +1,11 @@
+todo:
+DONE-if player 1 turn, disable player 2 from moving
+DONE-if square already has a mark, should not allow to make move on it again
+NOT FIXED-issues with callback in the server between Game and Board
+DONE-start with 2x2 of each player
+-only allow 1st and 2nd player join, then give error or redirect to watcher
+DONE-error when join invalid gameID
+DONE-when counting wins, cannot have empty space in between
+DONE-name cannot be too long
+DONE-add diagonal for counting wins
+-add color

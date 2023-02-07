@@ -1,0 +1,20 @@
+first time build:
+
+> cd client
+> npm install
+
+to run:
+
+> cd client
+> npm start
+
+
+------------------------------------------------------------
+
+client side is bootstrap with react
+
+setup:
+
+npx create-react-app client
+
+
