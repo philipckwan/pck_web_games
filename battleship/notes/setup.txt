@@ -1,0 +1,47 @@
+server 
+--------------------------
+to run:
+
+$ cd server
+$ npm run dev
+
+--------------------------
+first time build:
+
+$ cd server
+$ npm install
+
+--------------------------
+setup:
+
+$ cd server
+$ npm init -y
+
+$ npm i express
+
+install nodemon
+
+$ npm i nodemon -D
+
+
+-----------------------------------------------------------------
+
+client
+
+--------------------------
+to run:
+
+$ cd client
+$ npm start
+
+--------------------------
+first time build:
+
+$ cd client
+$ npm install
+
+--------------------------
+setup:
+
+(do not need to "mkdir client" and "cd client")
+$ npx create-react-app client

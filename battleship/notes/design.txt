@@ -1,0 +1,48 @@
+-high level design and flow
+
+-first capability
+-able to create a new game room
+ -then join the game room as Player1
+ -display a room # for player 2 to join
+-displays
+ -2 boards (10 x 10)
+  DONE-1 label in letters (a to j)
+  DONE-1 label in numbers (0-9)
+ -left board is player own setting
+ -right board is opponent's field
+-preparation steps
+ -1) create game room and join as player1
+ -2) player2 join the same game room
+ -3) position your own ships
+ -4) when both players completed ship placing, game can start
+
+game steps
+ -1) player1 goes first, choose the attack coordinate <letter><number>
+  -i.e. b5
+  -system determines whether it is hit or misses
+  -marks on both player's board
+   -marks on player1's opponent board
+   -marks on player2's own board
+ -2) if hit:
+  -specify the ship type hit
+  -if the hit completely destroy a ship?
+   -if yes, then announce the destroy of a ship
+   -if last ship destroyed, then game is finished
+ -3) swap player turn, back to #1
+
+
+-ships
+ -carrier (5 spaces)
+ -battleship (4 spaces)
+ -cruiser (3 spaces)
+ -2 destroyers (2 spaces)
+
+
+-server side
+-context - singleton
+ -games - map of games
+  -roomNumber
+  -2 player structs
+   -player name
+   -player's board
+

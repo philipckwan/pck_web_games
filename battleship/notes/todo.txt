@@ -1,0 +1,6 @@
+todo:
+
+DONE-when placing ships, need to check for collision
+DONE-when placing ships, need to check for out of bounds
+-corner case: if the start place of a ship into a position that it cannot place anymore, need to roll back the start place
+-build the first part of letting players join game, then place the ships
