@@ -23,6 +23,17 @@ install nodemon
 
 $ npm i nodemon -D
 
+update package.json with:
+  "main": "serverBattleship.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server",
+    "dev": "nodemon server"
+  },
+
+also, to be able to import the shared library:
+  "type": "module",
+
 
 -----------------------------------------------------------------
 
@@ -45,3 +56,24 @@ setup:
 
 (do not need to "mkdir client" and "cd client")
 $ npx create-react-app client
+
+
+-----------------------------------------------------------------
+
+shared library using "npm link"
+
+refer to this:
+https://sparkbox.com/foundry/test_project_changes_in_real_time_by_linking_your_component_library_and_project_with_npm_link
+
+the directory "battleship_shared_lib" should be shared between client and server.
+
+for the shared library:
+cd battleship_shared_lib
+npm link
+
+then for client:
+cd client
+npm link battleship_shared_lib
+
+
+

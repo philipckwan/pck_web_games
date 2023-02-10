@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import "./AppBattleship.css";
 
-import {timeLog, playerNameCheck} from './shared_lib/PCKUtilsClient'
+import {timeLog, playerNameCheck} from "battleship_shared_lib/src/PCKUtilsClient"
 import {Game} from './Game'
-import {GameModel} from "./shared_lib/GameModel";
+import {GameModel} from "battleship_shared_lib/src/GameModel";
 
 
 const APP_VERSION = "v0.2";
@@ -19,7 +19,7 @@ const MSG3="end position placed"
 const MSG4="invalid end position"
 
 
-const AppBattleShip = () => {
+const AppBattleship = () => {
   const [playerNameInput, setPlayerNameInput] = useState("");
   const [gameIDInput, setGameIDInput] = useState("");
   const [game, setGame] = useState(APP_TO_GAME_CONTEXT);
@@ -28,6 +28,15 @@ const AppBattleShip = () => {
   const [refreshIntervalID, setRefreshIntervalID] = useState(0);
   const [message, setMessage] = useState("input name to join a new game, or input name and game ID to join an existing game");
   const [messageColor, setMessageColor] = useState("black");
+
+  useEffect(() => {
+    //timeLog(`useEffect.pollGame: pollGame:${pollGame};`);
+    if (pollGame) {
+      setRefreshIntervalID(setInterval(refreshGame, 1000));
+    } else {
+      clearInterval(refreshIntervalID);
+    }
+  }, [pollGame]);
 
   function handlePlayerNameChange(event) {
     setPlayerNameInput(event.target.value);
@@ -38,6 +47,15 @@ const AppBattleShip = () => {
     setGameIDInput(event.target.value);
   }
 
+  function removeInputRows() {
+    document.getElementById("rowPlayerNameInput").remove();
+    document.getElementById("rowGameIDInput").remove();
+  }
+
+  function showGamePanel() {
+    timeLog(`AppBattleship.showGamePanel: 1.0;`);
+    document.getElementsByClassName("gamePanel")[0].style.display = 'block';
+  }
 
   async function handleStartNewGame() {
     let [checkPassed, checkMessage] = playerNameCheck(playerNameInput, PLAYER_NAME_LENGTH_MAX);
@@ -53,10 +71,10 @@ const AppBattleShip = () => {
     setGameIDInput(respJson.gameID);
     setPlayerNum(1);
     //setPollGame(true);
-    //setVersion(version+1);
-    //refreshGame();
-    //removeInputRows();
+    removeInputRows();
     setMessage("A new game is created, waiting for player 2 to join");
+    //document.getElementByClassName("gamePanel").remove();
+    //showGamePanel();
   }
 
   async function requestNewGame(playerName) {
@@ -65,14 +83,6 @@ const AppBattleShip = () => {
     return newGame;
     //newGame.setPlayerName(1, playerName);
 
-    //let respJson = await requestNewGame(playerNameInput);
-    //setGameIDInput(newGame.gameID);
-    //setPlayerNum(1);
-    //setPollGame(true);
-    //setVersion(version+1);
-    //refreshGame();
-    //removeInputRows();
-    //setMessage("A new game is created, waiting for player 2 to join");
 
   }
 
@@ -82,6 +92,24 @@ const AppBattleShip = () => {
 
   async function handleWatchGame() {
     // TBC
+  }
+
+
+  async function refreshGame() {
+    timeLog(`App.refreshGame: 1.0`);
+    /*
+    if (gameIDInput == "") {
+      return;
+    }
+    let theGame = await fetchGame(gameIDInput);
+    if (playerNum == 3 || theGame.playerNumTurn != playerNum) {
+      setPollGame(true);
+    } else {
+      setPollGame(false);
+    }
+    //timeLog(`App.refreshGame: calling setGame with playerNumTurn:${theGame.playerNumTurn};`)
+    setGame(theGame);
+    */
   }
 
   return (
@@ -108,9 +136,11 @@ const AppBattleShip = () => {
         </table>  
       </div>
       {/**<Game game={game} playerNum={playerNum} callback={refreshGame}/>**/}
-      <Game/>
+      <div className="gamePanel">
+        <Game/>
+      </div>
     </>
   );
 };
 
-export default AppBattleShip;
+export default AppBattleship;

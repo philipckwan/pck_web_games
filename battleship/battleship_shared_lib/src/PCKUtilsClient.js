@@ -1,7 +1,7 @@
 export function timeLog(msg) {
   let current = new Date();
   let currentTime  = current.toLocaleTimeString();
-  console.log(`[${currentTime}]${msg}`);
+  console.log(`v8-[${currentTime}]${msg}`);
 }
 
 export function playerNameCheck(playerName, maxLength) {

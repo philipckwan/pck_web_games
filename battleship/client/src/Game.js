@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {timeLog} from './shared_lib/PCKUtilsClient'
+import {timeLog} from "battleship_shared_lib/src/PCKUtilsClient"
 import {GameFSM} from "./GameFSM";
 
 const ImageOneSquare = require("./images/one_square-30x30.jpg");
@@ -116,7 +116,7 @@ export function Game (props) {
         </table>  
       </div>
       <br />    
-      <div className="AppBattleship">
+      <div className="gameBattleship">
         <table>
           <tbody>
             <tr>

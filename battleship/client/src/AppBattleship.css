@@ -35,3 +35,7 @@ td {
 .myTableMessageTD {
   width: 500px;
 }
+
+.gamePanel {
+  display: none;
+}

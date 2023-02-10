@@ -1,4 +1,4 @@
-//import {timeLog} from './PCKUtilsClient'
+import {timeLog} from './PCKUtilsClient'
 
 const WINNING_SCORE = 10;
 
@@ -16,11 +16,11 @@ export class GameModel {
     //this.board = new Board(this.reportWinner);
     //this.player1 = new PlayerBoard();
     //this.player2 = new PlayerBoard();
-    console.log(`GameModel(): _gameID:${_gameID};`);
+    timeLog(`GameModel(): _gameID:${_gameID};`);
   }
 
   setPlayerName(playerNum, playerName) {
-    console.log(`GameModel.setPlayerName: playerNum:${playerNum}, playerName:${playerName};`)
+    timeLog(`GameModel.setPlayerName: playerNum:${playerNum}, playerName:${playerName};`)
     let playerNumInt = parseInt(playerNum);
     if (playerNumInt == 1) {
       //this.board.setPlayer1Name(playerName);
