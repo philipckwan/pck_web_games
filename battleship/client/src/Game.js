@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {timeLog} from "battleship_shared_lib/src/PCKUtilsClient"
+import {timeLog} from "./common/PCKUtilsClient"
 import {GameFSM} from "./GameFSM";
 
 const ImageOneSquare = require("./images/one_square-30x30.jpg");

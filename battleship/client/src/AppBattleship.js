@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import "./AppBattleship.css";
 
-import {timeLog, playerNameCheck} from "battleship_shared_lib/src/PCKUtilsClient"
+import {timeLog, playerNameCheck} from "./common/PCKUtilsClient.js"
 import {Game} from './Game'
-import {GameModel} from "battleship_shared_lib/src/GameModel";
+import {GameModel} from "./common/GameModel";
 
 
 const APP_VERSION = "v0.2";

@@ -1,7 +1,7 @@
 import express from "express"
 const app = express()
 app.use(express.json())
-import {timeLog} from "battleship_shared_lib/src/PCKUtilsClient.mjs"
+import {timeLog} from "./common/PCKUtilsServer.js"
 //const {timeLog} = pkg;
 //const {Context} = require('./src/Context');
 
