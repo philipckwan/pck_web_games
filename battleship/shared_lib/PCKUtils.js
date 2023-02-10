@@ -1,8 +1,8 @@
 export function timeLog(msg) {
   let current = new Date();
   let currentTime  = current.toLocaleTimeString();
-  console.log(`v8-[${currentTime}]${msg}`);
-}
+  console.log(`v11-[${currentTime}]${msg}`);
+};
 
 export function playerNameCheck(playerName, maxLength) {
   let checkPassed = true;
@@ -20,8 +20,3 @@ export function playerNameCheck(playerName, maxLength) {
   }
   return [checkPassed, message];
 }
-/*
-export function FormattedDate(props) {
-  return <h2>It is {props.date.toLocaleTimeString()}</h2>
-}
-*/

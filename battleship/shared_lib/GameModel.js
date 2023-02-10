@@ -1,4 +1,4 @@
-import {timeLog} from './PCKUtilsClient'
+import {timeLog} from './PCKUtils.js'
 
 const WINNING_SCORE = 10;
 
