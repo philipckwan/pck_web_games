@@ -8,20 +8,8 @@ https://flaviocopes.com/commonjs/
 https://fjolt.com/article/javascript-export-import-node-js
 "...The difference between import and require is require is for Node.JS, and import is a Javascript/ECMAScript standard..."
 
-finally, what i did was to have both .js and .mjs file available
-where .mjs is the original file, and .js is a symlink to it.
-
-i.e. for the common shared library (battleship_shared_lib) to work:
-
-Philips-MBP:src philip$ pwd
-/Users/philip/workspaces/workspace-git/pck_web_games/battleship/battleship_shared_lib/src
-Philips-MBP:src philip$ ls -l
-total 16
-lrwxr-xr-x  1 philip  staff    13 Feb 10 18:05 GameModel.js -> GameModel.mjs
--rw-r--r--  1 philip  staff  1028 Feb 10 16:27 GameModel.mjs
-lrwxr-xr-x  1 philip  staff    18 Feb 10 18:03 PCKUtilsClient.js -> PCKUtilsClient.mjs
--rw-r--r--  1 philip  staff   760 Feb 10 18:04 PCKUtilsClient.mjs
-Philips-MBP:src philip$ 
+for now, the resolution is to have a shared_lib directory at top level (i.e. together with client and server),
+ then it is symlink within client/src and server/src
 
 server side has to add this to package.json:
   "type": "module",

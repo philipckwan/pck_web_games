@@ -10,7 +10,8 @@ DONE-handle the player1Turn/player2Turn to thisPlayerTurn/otherPlayerTurn proper
 -display proper image of the ships, square by square
 DONE-mark green O and red X for hits and misses, on both boards
 DONE-not allow hitting an non-empty square
--consider refractoring and handle the TODO hacky stuffs
+DONE-consider refractoring and handle the TODO hacky stuffs
 -when player getGame, hide the opponent game board so that player cannot hack to see the ship placements
 DONE-display the name of players on the board
--is client really reusing the shared_lib?
+DONE-is client really reusing the shared_lib? answer is YES
+-add game watcher

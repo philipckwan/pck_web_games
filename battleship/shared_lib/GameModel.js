@@ -54,49 +54,27 @@ export class GameModel {
 
   attack(playerNum, row, col) {
     timeLog(`GameModel.attack: playerNum:${playerNum}, [${row},${col}];`);
-    let results = [];
+    let isHit = false;
+    let message = "";
+    let isAllSunk = false;
     if (parseInt(playerNum) == 1) {
-      results = this.board2.attack(row, col);
+      [isHit, message, isAllSunk] = this.board2.attack(row, col);
+      if (isAllSunk) {
+        this.state = GAME_STATE_PLAYER_1_WIN;
+      }
     } else {
-      results = this.board1.attack(row, col);
-    }
-    timeLog(`GameModel.attack: playerNum:${playerNum}, isHit:${results[0]}; message:${results[1]};`);
-
-    // check if game is finished
-    // hacky, not the best way
-    let allShipsPlacementsBoard1 = this.board1.ships.ships;
-    let board1StillAlive = false;
-    for (let aShip of allShipsPlacementsBoard1.keys()) {
-      let unHitPositions = allShipsPlacementsBoard1.get(aShip);
-      if (unHitPositions.size > 0) {
-        board1StillAlive = true;
-        break;
+      [isHit, message, isAllSunk] = this.board1.attack(row, col);
+      if (isAllSunk) {
+        this.state = GAME_STATE_PLAYER_2_WIN;
+        
       }
     }
-    if (!board1StillAlive) {
-      this.state = GAME_STATE_PLAYER_2_WIN;
-      return results;
+    timeLog(`GameModel.attack: playerNum:${playerNum}, isHit:${isHit}; message:${message}; isAllSunk:${isAllSunk};`);
+    if (!isAllSunk) {
+      // switch player turn
+      this.state = this.state == GAME_STATE_PLAYER_1_TURN ? GAME_STATE_PLAYER_2_TURN : GAME_STATE_PLAYER_1_TURN;
     }
-
-    let allShipsPlacementsBoard2 = this.board2.ships.ships;
-    let board2StillAlive = false;
-    for (let aShip of allShipsPlacementsBoard2.keys()) {
-      let unHitPositions = allShipsPlacementsBoard2.get(aShip);
-      if (unHitPositions.size > 0) {
-        board2StillAlive = true;
-        break;
-      }
-    }
-    if (!board2StillAlive) {
-      this.state = GAME_STATE_PLAYER_1_WIN;
-      return results;
-    }
-    
-
-    // switch player turn
-    this.state = this.state == GAME_STATE_PLAYER_1_TURN ? GAME_STATE_PLAYER_2_TURN : GAME_STATE_PLAYER_1_TURN;
-
-    return results;
+    return [isHit, message];
   }
 
 }

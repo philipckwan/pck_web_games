@@ -50,9 +50,19 @@ app.post("/games/:gameID/join", (req, res) => {
   });
 });
 
+/*
 app.get("/games/:gameID", (req, res) => {
   let gameID = parseInt(req.params.gameID);
   //timeLog(`server.app.get:/games/:gameID:${gameID}`);
+  let aGame = Context.Instance.games.get(gameID);
+  res.send({game:aGame});
+});
+*/
+
+app.get("/games/:gameID/:playerNum", (req, res) => {
+  let gameID = parseInt(req.params.gameID);
+  let playerNum = parseInt(req.params.playerNum);
+  timeLog(`server.app.get:/games/:gameID:${gameID}/:playerNum:${playerNum}`);
   let aGame = Context.Instance.games.get(gameID);
   res.send({game:aGame});
 });

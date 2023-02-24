@@ -1,18 +1,19 @@
 import {useEffect, useState} from "react";
 import {timeLog} from "./shared_lib/PCKUtils"
 import {GameFSM} from "./GameFSM";
-import {GAME_STATE_SHIP_PLACEMENTS} from "./shared_lib/GameModel";
+import {ARRAY_SHIP_SYMBOLS} from "./shared_lib/BoardModel";
 
 const ImageOneSquare = require("./images/one_square-30x30.jpg");
 const SQUARE_SHIP_PLACED = '.';
+
 
 const Square = ({ square, onClick }) => {
   return (
     <td
       className="square"
-      style={{ width: "30px", height: "30px", backgroundImage: square === SQUARE_SHIP_PLACED ? `url(${ImageOneSquare})` : "none", }}
+      style={{ width: "30px", height: "30px", backgroundImage: ARRAY_SHIP_SYMBOLS.includes(square) ? `url(${ImageOneSquare})` : "none", }}
       onClick={onClick}
-    ><font color={square === 'X' ? "red" : square === 'O' ? "green" : "black"}>{square}</font>
+    ><font color={square === 'X' ? "red" : square === 'O' ? "green" : "black"}>{ARRAY_SHIP_SYMBOLS.includes(square) ? '' : square}</font>
     </td>
   );
 };
@@ -23,7 +24,7 @@ const OppSquare = ({ square, onClick }) => {
       className="square"
       style={{ width: "30px", height: "30px"}}
       onClick={onClick}
-    ><font color={square === 'X' ? "red" : square === 'O' ? "green" : "black"}>{square === '.' ? '' : square}</font>    
+    ><font color={square === 'X' ? "red" : square === 'O' ? "green" : "black"}>{ARRAY_SHIP_SYMBOLS.includes(square) ? '' : square}</font>    
     </td>
   );
 };
@@ -102,8 +103,6 @@ export function GameBS (props) {
   }
 
   async function refreshGame() {
-    //timeLog(`GameBS.refreshGame: 1.0`);
-    
     if (gameID == "") {
       timeLog(`GameBS.refreshGame: gameID is null;`);
       return;
@@ -112,9 +111,8 @@ export function GameBS (props) {
     }
     //let theGame = await fetchGame(gameIDInput);
     
-    const response = await fetch(`/games/${gameID}`);
+    const response = await fetch(`/games/${gameID}/${playerNum}`);
     const json = await response.json();
-    //timeLog(`__json:${JSON.stringify(json)};`);
     let theGame = json.game;
     let nextStateID = theGame.state;
     if (nextStateID === "player1Turn" || nextStateID === "player2Turn") {
@@ -329,7 +327,6 @@ export function GameBS (props) {
             </tr>
           </tbody>
         </table>
-        
       </div>
     </>
   );

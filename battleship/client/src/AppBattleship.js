@@ -1,47 +1,20 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import "./AppBattleship.css";
 
 import {timeLog, playerNameCheck} from "./shared_lib/PCKUtils"
 import {GameBS} from './GameBS'
-import {GAME_STATE_SHIP_PLACEMENTS, GAME_STATE_PLAYER_1_JOINED} from "./shared_lib/GameModel";
 
 
-const APP_VERSION = "v0.2";
-const APP_TO_GAME_CONTEXT = {
-  status: "game not started",
-  gameID: 0,
-  playerNumTurn: 0,
-};
+const APP_VERSION = "v1.1";
 const PLAYER_NAME_LENGTH_MAX = 12;
-/*
-const MSG1="-";
-const MSG2="start position placed, please place the end";
-const MSG3="end position placed"
-const MSG4="invalid end position"
-*/
-
 
 const AppBattleship = () => {
   const [playerNameInput, setPlayerNameInput] = useState("");
   const [gameIDInput, setGameIDInput] = useState("");
-  //const [game, setGame] = useState(APP_TO_GAME_CONTEXT);
   const [playerNum, setPlayerNum] = useState(0);
-  //const [pollGame, setPollGame] = useState(false);
-  //const [refreshIntervalID, setRefreshIntervalID] = useState(0);
   const [message, setMessage] = useState("input name to join a new game, or input name and game ID to join an existing game");
   const [messageColor, setMessageColor] = useState("black");
   const [appActive, setAppActive] = useState(true);
-
-  /*
-  useEffect(() => {
-    //timeLog(`useEffect.pollGame: pollGame:${pollGame};`);
-    if (pollGame) {
-      setRefreshIntervalID(setInterval(refreshGame, 1000));
-    } else {
-      clearInterval(refreshIntervalID);
-    }
-  }, [pollGame]);
-  */
 
   function handlePlayerNameChange(event) {
     setPlayerNameInput(event.target.value);
@@ -144,7 +117,6 @@ const AppBattleship = () => {
           </tbody>
         </table>  
       </div>
-      {/**<Game game={game} playerNum={playerNum} callback={refreshGame}/>**/}
       <br />
       <div id="gamePanel">
         <GameBS appActive={appActive} gameID={gameIDInput} playerNum={playerNum} />
