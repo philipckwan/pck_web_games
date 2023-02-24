@@ -3,4 +3,14 @@ todo:
 DONE-when placing ships, need to check for collision
 DONE-when placing ships, need to check for out of bounds
 -corner case: if the start place of a ship into a position that it cannot place anymore, need to roll back the start place
--build the first part of letting players join game, then place the ships
+DONE-build the first part of letting players join game, then place the ships
+DONE-record the placements on the server side
+DONE-switch turn after a player make a move
+DONE-handle the player1Turn/player2Turn to thisPlayerTurn/otherPlayerTurn properly
+-display proper image of the ships, square by square
+DONE-mark green O and red X for hits and misses, on both boards
+DONE-not allow hitting an non-empty square
+-consider refractoring and handle the TODO hacky stuffs
+-when player getGame, hide the opponent game board so that player cannot hack to see the ship placements
+DONE-display the name of players on the board
+-is client really reusing the shared_lib?

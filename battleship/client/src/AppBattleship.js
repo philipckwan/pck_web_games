@@ -2,8 +2,8 @@ import React, {useEffect, useState} from "react";
 import "./AppBattleship.css";
 
 import {timeLog, playerNameCheck} from "./shared_lib/PCKUtils"
-import {Game} from './Game'
-import {GameModel} from "./shared_lib/GameModel";
+import {GameBS} from './GameBS'
+import {GAME_STATE_SHIP_PLACEMENTS, GAME_STATE_PLAYER_1_JOINED} from "./shared_lib/GameModel";
 
 
 const APP_VERSION = "v0.2";
@@ -13,22 +13,26 @@ const APP_TO_GAME_CONTEXT = {
   playerNumTurn: 0,
 };
 const PLAYER_NAME_LENGTH_MAX = 12;
+/*
 const MSG1="-";
 const MSG2="start position placed, please place the end";
 const MSG3="end position placed"
 const MSG4="invalid end position"
+*/
 
 
 const AppBattleship = () => {
   const [playerNameInput, setPlayerNameInput] = useState("");
   const [gameIDInput, setGameIDInput] = useState("");
-  const [game, setGame] = useState(APP_TO_GAME_CONTEXT);
+  //const [game, setGame] = useState(APP_TO_GAME_CONTEXT);
   const [playerNum, setPlayerNum] = useState(0);
-  const [pollGame, setPollGame] = useState(false);
-  const [refreshIntervalID, setRefreshIntervalID] = useState(0);
+  //const [pollGame, setPollGame] = useState(false);
+  //const [refreshIntervalID, setRefreshIntervalID] = useState(0);
   const [message, setMessage] = useState("input name to join a new game, or input name and game ID to join an existing game");
   const [messageColor, setMessageColor] = useState("black");
+  const [appActive, setAppActive] = useState(true);
 
+  /*
   useEffect(() => {
     //timeLog(`useEffect.pollGame: pollGame:${pollGame};`);
     if (pollGame) {
@@ -37,24 +41,20 @@ const AppBattleship = () => {
       clearInterval(refreshIntervalID);
     }
   }, [pollGame]);
+  */
 
   function handlePlayerNameChange(event) {
     setPlayerNameInput(event.target.value);
-    
   }
 
   function handleGameIDChange(event) {
     setGameIDInput(event.target.value);
   }
 
-  function removeInputRows() {
-    document.getElementById("rowPlayerNameInput").remove();
-    document.getElementById("rowGameIDInput").remove();
-  }
-
-  function showGamePanel() {
-    timeLog(`AppBattleship.showGamePanel: 1.0;`);
-    document.getElementsByClassName("gamePanel")[0].style.display = 'block';
+  function removeInputRowsAndShowGameInfo() {
+    document.getElementById("rowPlayerNameInput").remove();//.style.display = "none";
+    document.getElementById("rowGameIDInput").remove();//.style.display = "none";
+    document.getElementById("rowGameIDFromServer").style.display = "table-row";
   }
 
   async function handleStartNewGame() {
@@ -66,50 +66,54 @@ const AppBattleship = () => {
       setMessageColor("red");
       return;
     }
-    let respJson = await requestNewGame(playerNameInput);
-    timeLog(`AppBattleship.handleStartNewGame: respJson:${respJson};`);
+    const response = await fetch(`/games`, {
+      method: 'post',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+       "playerName": playerNameInput,
+      })
+    });
+    let respJson = await response.json();
     setGameIDInput(respJson.gameID);
-    setPlayerNum(1);
-    //setPollGame(true);
-    removeInputRows();
+    removeInputRowsAndShowGameInfo();
     setMessage("A new game is created, waiting for player 2 to join");
-    //document.getElementByClassName("gamePanel").remove();
-    //showGamePanel();
-  }
-
-  async function requestNewGame(playerName) {
-    timeLog(`AppBattleship..requestNewGame: 1.0;`);
-    let newGame = new GameModel(Math.floor(Math.random() * (99 - 1) + 1));
-    return newGame;
-    //newGame.setPlayerName(1, playerName);
-
-
+    setPlayerNum(1);
+    setAppActive(false);
   }
 
   async function handleJoinGame() {
-    // TBC
+    let [checkPassed, checkMessage] = playerNameCheck(playerNameInput, PLAYER_NAME_LENGTH_MAX);
+    setMessageColor("black");
+    setMessage("proceed to join game");
+    if (!checkPassed) {
+      setMessage(checkMessage);
+      setMessageColor("red");
+      return;
+    }
+    if (gameIDInput == "") {
+      setMessage("ERROR - cannot join game with empty game ID");
+      setMessageColor("red");
+      return;
+    }
+    const response = await fetch(`/games/${gameIDInput}/join`, {
+      method: 'post',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+       "playerName": playerNameInput,
+      })
+    });
+    let respJson = await response.json();
+    if (respJson.results != "OK") {
+      setMessage(respJson.results);
+    } else {
+      removeInputRowsAndShowGameInfo();
+      setPlayerNum(2);
+      setAppActive(false);
+    }
   }
 
   async function handleWatchGame() {
     // TBC
-  }
-
-
-  async function refreshGame() {
-    timeLog(`App.refreshGame: 1.0`);
-    /*
-    if (gameIDInput == "") {
-      return;
-    }
-    let theGame = await fetchGame(gameIDInput);
-    if (playerNum == 3 || theGame.playerNumTurn != playerNum) {
-      setPollGame(true);
-    } else {
-      setPollGame(false);
-    }
-    //timeLog(`App.refreshGame: calling setGame with playerNumTurn:${theGame.playerNumTurn};`)
-    setGame(theGame);
-    */
   }
 
   return (
@@ -132,12 +136,18 @@ const AppBattleship = () => {
             <td><input type="text" size="5" id="gameIDInput" name="gameIDInput" onChange={handleGameIDChange} value={gameIDInput} /></td>
             <td><button onClick={handleJoinGame}>Join Game</button><button onClick={handleWatchGame}>Watch Game</button></td>
           </tr>    
+          <tr id="rowGameIDFromServer">
+            <td className="myTableNameTD">Game ID</td>
+            <td className="myTableNameTD">{gameIDInput}</td>
+            <td className="myTableMessageTD"></td>
+          </tr>    
           </tbody>
         </table>  
       </div>
       {/**<Game game={game} playerNum={playerNum} callback={refreshGame}/>**/}
-      <div className="gamePanel">
-        <Game/>
+      <br />
+      <div id="gamePanel">
+        <GameBS appActive={appActive} gameID={gameIDInput} playerNum={playerNum} />
       </div>
     </>
   );

@@ -32,10 +32,18 @@ td {
   width: 100px;
 }
 
+.gamePanelTable {
+  width: 1000px;
+}
+
 .myTableMessageTD {
   width: 500px;
 }
 
-.gamePanel {
+#gamePanel {
+  display: block;
+}
+
+#rowGameIDFromServer {
   display: none;
 }
