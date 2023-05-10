@@ -7,11 +7,28 @@ import {timeLog} from "./shared_lib/PCKUtils.js"
 import {Context} from "./Context.js";
 
 
-let version = "v0.1"
+let version = "v0.2"
+
+/* This below helps with CORS for calling from other places like a nextjs
+ https://stackoverflow.com/questions/65058598/nextjs-cors-issue
+*/
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+if (req.method == "OPTIONS") {
+  res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
+  return res.status(200).json({});
+}
+next();
+});
 
 app.get("/api", (req, res) => {
   timeLog(`serverBattleship: get./api;`);
   res.json({
+    name: "serverBattleship",
     version: version
   })
 });

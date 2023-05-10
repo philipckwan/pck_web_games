@@ -1,19 +1,29 @@
 import {useEffect, useState} from "react";
 import {timeLog} from "./shared_lib/PCKUtils"
 import {GameFSM} from "./GameFSM";
-import {ARRAY_SHIP_SYMBOLS} from "./shared_lib/BoardModel";
+import {SYMBOL_EMPTY, SYMBOL_HIT, SYMBOL_MISSED, ARRAY_SHIP_SYMBOLS} from "./shared_lib/BoardModel";
 
-const ImageOneSquare = require("./images/one_square-30x30.jpg");
-const SQUARE_SHIP_PLACED = '.';
+const ImageAT = require("./images/AT.jpg");
+const ImageC0 = require("./images/C0.jpg");
+const ImageC1 = require("./images/C1.jpg");
+const ImageC2 = require("./images/C2.jpg");
+const ImageC3 = require("./images/C3.jpg");
+const ImageC4 = require("./images/C4.jpg");
+const ImageB0 = require("./images/B0.jpg");
+const ImageB1 = require("./images/B1.jpg");
+const ImageB2 = require("./images/B2.jpg");
+const ImageB3 = require("./images/B3.jpg");
+const SQUARE_SHIP_PLACED = '@';
 
 
 const Square = ({ square, onClick }) => {
   return (
     <td
       className="square"
-      style={{ width: "30px", height: "30px", backgroundImage: ARRAY_SHIP_SYMBOLS.includes(square) ? `url(${ImageOneSquare})` : "none", }}
+      style={{ width: "30px", height: "30px", backgroundImage: `${symbolToImage(square)}`, transform:`${symbolToRotate(square)}`}}
+      //style={{ width: "30px", height: "30px", backgroundImage: ARRAY_SHIP_SYMBOLS.includes(square.substring(0,1)) ? `url(${symbolToImage(square)})` : "none", }}
       onClick={onClick}
-    ><font color={square === 'X' ? "red" : square === 'O' ? "green" : "black"}>{ARRAY_SHIP_SYMBOLS.includes(square) ? '' : square}</font>
+    ><font color={square === SYMBOL_MISSED ? "red" : square === SYMBOL_HIT ? "green" : "black"}>{ARRAY_SHIP_SYMBOLS.includes(square.substring(0,1)) ? '' : square}</font>
     </td>
   );
 };
@@ -24,40 +34,84 @@ const OppSquare = ({ square, onClick }) => {
       className="square"
       style={{ width: "30px", height: "30px"}}
       onClick={onClick}
-    ><font color={square === 'X' ? "red" : square === 'O' ? "green" : "black"}>{ARRAY_SHIP_SYMBOLS.includes(square) ? '' : square}</font>    
+    ><font color={square === SYMBOL_MISSED ? "red" : square === SYMBOL_HIT ? "green" : "black"}>{ARRAY_SHIP_SYMBOLS.includes(square.substring(0,1)) ? '' : square}</font>    
     </td>
   );
 };
 
+const symbolToRotate = (symbol) => {
+  let symbolFirstChar = symbol.substring(0,1);
+  if (!ARRAY_SHIP_SYMBOLS.includes(symbolFirstChar)) {
+    return "none";
+  }
+  let symbolThirdChar = symbol.substring(2,3);
+  if (symbolThirdChar === 'V') {
+    return "rotate(90deg)";
+  }
+}
+
+const symbolToImage = (symbol) => {
+  let symbolFirstChar = symbol.substring(0,1);
+  if (!ARRAY_SHIP_SYMBOLS.includes(symbolFirstChar)) {
+    return "none";
+  }
+  let symbolFirstTwoChar = symbol.substring(0,2);
+  let image = undefined;
+  switch (symbolFirstTwoChar) {
+    case "C0":
+      image = ImageC0; break;
+    case "C1":
+      image = ImageC1; break;
+    case "C2":
+      image = ImageC2; break;
+    case "C3":
+      image = ImageC3; break;            
+    case "C4":
+      image = ImageC4; break;
+    case "B0":
+      image = ImageB0; break;
+    case "B1":
+      image = ImageB1; break;
+    case "B2":
+      image = ImageB2; break;
+    case "B3":
+      image = ImageB3; break;   
+    default:
+      image = ImageAT;    
+  }
+  return `url(${image})`;
+}
+
 export function GameBS (props) {
 
   const [myBoard, setMyBoard] = useState([    
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""]
+    [SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY],
+    [SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY],
+    [SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY],
+    [SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY],
+    [SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY],
+    [SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY],
+    [SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY],
+    [SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY],
+    [SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY],
+    [SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY],
   ]);
   const [oppBoard, setOppBoard] = useState([    
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", ""]
+    [SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY],
+    [SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY],
+    [SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY],
+    [SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY],
+    [SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY],
+    [SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY],
+    [SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY],
+    [SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY],
+    [SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY],
+    [SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY, SYMBOL_EMPTY],
   ]);
   const [myName, setMyName] = useState("n/a");
   const [oppName, setOppName] = useState("n/a");
   const [gameMessage, setGameMessage] = useState("-");
+  const [gameStateMessageColor, setGameStateMessageColor] = useState("black");
   const [gameStateID, setGameStateID] = useState("start");
   const [firstPos, setFirstPos] = useState([0,0]);
   const [pollGame, setPollGame] = useState(false);
@@ -118,16 +172,20 @@ export function GameBS (props) {
     if (nextStateID === "player1Turn" || nextStateID === "player2Turn") {
       if ((playerNum === 1 && nextStateID === "player1Turn") || (playerNum === 2 && nextStateID === "player2Turn")) {
         nextStateID = "thisPlayerTurn";
+        setGameStateMessageColor("green");
         setGameMessage("-");
       } else {
+        setGameStateMessageColor("red");
         nextStateID = "otherPlayerTurn";
       }
     }
     if (nextStateID === "player1Win" || nextStateID === "player2Win") {
       if ((playerNum === 1 && nextStateID === "player1Win") || (playerNum === 2 && nextStateID === "player2Win")) {
         nextStateID = "thisPlayerWin";
+        setGameStateMessageColor("blue");
         setGameMessage("-");
       } else {
+        setGameStateMessageColor("brown");
         nextStateID = "thisPlayerLose";
       }
     }
@@ -216,7 +274,7 @@ export function GameBS (props) {
       setGameMessage("ERROR - You cannot make an attack as it is not your turn yet.");
       return;
     }
-    if (oppBoard[rowIndex][colIndex] === 'X'  || oppBoard[rowIndex][colIndex] === 'O') {
+    if (oppBoard[rowIndex][colIndex] === SYMBOL_MISSED  || oppBoard[rowIndex][colIndex] === SYMBOL_HIT) {
       setGameMessage("ERROR - You cannot make an attack on a square that you have already attacked before.");
       return;
     }
@@ -250,7 +308,7 @@ export function GameBS (props) {
           </tr>     
           <tr>
             <td style={{ width: "100px"}}>gameStateMessage</td>
-            <td style={{ width: "500px"}}>{GameFSM[gameStateID].message}</td>
+            <td style={{ width: "500px"}}><font color={gameStateMessageColor}>{GameFSM[gameStateID].message}</font></td>
           </tr> 
           </tbody>
         </table>  

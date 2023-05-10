@@ -2,9 +2,9 @@ import {timeLog} from "./PCKUtils.js"
 import {PlayerModel} from "./PlayerModel.js"
 //import {ShipsModel} from "./ShipsModel.js"
 
-const SYMBOL_EMPTY = '';
-const SYMBOL_HIT = 'O';
-const SYMBOL_MISSED = 'X';
+export const SYMBOL_EMPTY = '';
+export const SYMBOL_HIT = 'O';
+export const SYMBOL_MISSED = 'X';
 
 const SYMBOL_CARRIER = 'C';
 const SYMBOL_BATTLESHIP = 'B';
@@ -57,6 +57,12 @@ export class BoardModel {
    */
   markFullPositions(startPosition, endPosition, shipSymbol) {
     if (startPosition[0] == endPosition[0]) {
+      let rowFixed = startPosition[0];
+      let [colStart, colEnd] = startPosition[1] < endPosition[1] ? [startPosition[1], endPosition[1]] : [endPosition[1], startPosition[1]];
+      for (let j = colStart; j <= colEnd; j++) {
+        this.board[rowFixed][j] = `${shipSymbol}${j-colStart}H`;
+      }
+      /*
       if (startPosition[1] < endPosition[1]) {
         for (let j = startPosition[1]; j <= endPosition[1]; j++) {
           this.board[startPosition[0]][j] = shipSymbol;
@@ -66,7 +72,14 @@ export class BoardModel {
           this.board[startPosition[0]][j] = shipSymbol;
         }
       }
+      */
     } else {
+      let colFixed = startPosition[1];
+      let [rowStart, rowEnd] = startPosition[0] < endPosition[0] ? [startPosition[0], endPosition[0]] : [endPosition[0], startPosition[0]];
+      for (let j = rowStart; j <= rowEnd; j++) {
+        this.board[j][colFixed] = `${shipSymbol}${j-rowStart}V`;
+      }
+      /*
       if (startPosition[0] < endPosition[0]) {
         for (let j = startPosition[0]; j <= endPosition[0]; j++) {
           this.board[j][startPosition[1]] = shipSymbol;
@@ -76,6 +89,7 @@ export class BoardModel {
           this.board[j][startPosition[1]] = shipSymbol;
         }
       }
+      */
     }
   }
 
@@ -121,16 +135,18 @@ export class BoardModel {
     let colLetter = String.fromCharCode('A'.charCodeAt() + col); 
 
     let currentAttackSymbol = this.board[row][col];
-    if (this.shipsSymbolToName.get(currentAttackSymbol) != undefined) {
+    let currentAttackSymbolFirstChar = currentAttackSymbol.substring(0,1);
+    timeLog(`BoardModel.attack: currentAttackSymbolFirstChar:${currentAttackSymbolFirstChar};`);
+    if (this.shipsSymbolToName.get(currentAttackSymbolFirstChar) != undefined) {
       // it's a hit
-      this.shipsSymbolToHP.set(currentAttackSymbol,  this.shipsSymbolToHP.get(currentAttackSymbol) - 1);
-      if (this.shipsSymbolToHP.get(currentAttackSymbol) === 0) {
+      this.shipsSymbolToHP.set(currentAttackSymbolFirstChar,  this.shipsSymbolToHP.get(currentAttackSymbolFirstChar) - 1);
+      if (this.shipsSymbolToHP.get(currentAttackSymbolFirstChar) === 0) {
         // this ship is hit, and is sunk
         this.numShipAlive = this.numShipAlive - 1;
-        results = [true, `ship [${this.shipsSymbolToName.get(currentAttackSymbol)}] is hit and sunk at [${row},${colLetter}];`, this.numShipAlive == 0];
+        results = [true, `ship [${this.shipsSymbolToName.get(currentAttackSymbolFirstChar)}] is hit and sunk at [${row},${colLetter}];`, this.numShipAlive == 0];
       } else {
         // this ship is hit, but still alive
-        results = [true, `ship [${this.shipsSymbolToName.get(currentAttackSymbol)}] is hit at [${row},${colLetter}];`, false];
+        results = [true, `ship [${this.shipsSymbolToName.get(currentAttackSymbolFirstChar)}] is hit at [${row},${colLetter}];`, false];
       }
       this.board[row][col] = SYMBOL_HIT;
     } else {
